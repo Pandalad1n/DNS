@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  dns:
+    build:
+      context: .
+      dockerfile: cmd/dns/Dockerfile
+    ports:
+    - 8090:8090
+    environment:
+      - LISTEN_WEB_ADDRESS=:8090
+      - SECTOR_ID=1
+      - LOG_LVL=debug
+  prometheus:
+    image: prom/prometheus:v2.30.3
+    ports:
+      - 9000:9090
+    user: root
+    volumes:
+      - ./prom:/etc/prometheus
+      - ./.artifacts/prom:/prometheus
+    command: --web.enable-lifecycle  --config.file=/etc/prometheus/prom.yaml
