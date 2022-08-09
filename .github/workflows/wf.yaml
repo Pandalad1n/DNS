@@ -1,7 +1,28 @@
 name: test-app
-on: [push]
+on:
+  push:
+  pull_request:
 jobs:
-  run-unit:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.17'
+      - run: go build ./cmd/dns
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.17'
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.29
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
