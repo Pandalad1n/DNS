@@ -1,10 +1,11 @@
 .PHONY: start
 start:
-	docker-compose up
-
-.PHONY: start-web
-start-web:
+	docker-compose build
 	docker-compose up dns
+
+.PHONY: start-telemetry
+start-telemetry:
+	docker-compose up
 
 .PHONY: build
 build:
@@ -18,6 +19,16 @@ test:
 		-w /app \
 		-v ${PWD}:/app \
 		golang:1.17 go test ./... -race -timeout 2m
+
+.PHONY: bench
+bench:
+	docker run \
+		-it \
+		--rm \
+		-w /app \
+		-v ${PWD}/k6:/app \
+		--network dns \
+		loadimpact/k6 run test.js
 
 .PHONY: lint
 lint:

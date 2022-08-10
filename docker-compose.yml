@@ -5,7 +5,9 @@ services:
       context: .
       dockerfile: cmd/dns/Dockerfile
     ports:
-    - 8090:8090
+      - 8090:8090
+    networks:
+      - dns
     environment:
       - LISTEN_WEB_ADDRESS=:8090
       - SECTOR_ID=1
@@ -15,7 +17,13 @@ services:
     ports:
       - 9000:9090
     user: root
+    networks:
+      - dns
     volumes:
       - ./prom:/etc/prometheus
       - ./.artifacts/prom:/prometheus
     command: --web.enable-lifecycle  --config.file=/etc/prometheus/prom.yaml
+
+networks:
+  dns:
+    name: dns
