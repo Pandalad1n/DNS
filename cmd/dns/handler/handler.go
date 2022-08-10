@@ -80,6 +80,7 @@ func locateDrone(sectorID float64) http.HandlerFunc {
 			Loc float64 `json:"loc"`
 		}
 		loc := dr.Locate(sectorID)
+		// Round is used for rounding to 2 decimals.
 		loc = math.Round(loc*100) / 100
 		apiResponse{Code: http.StatusOK, Body: locationData{Loc: loc}}.Write(w)
 	}
