@@ -50,9 +50,12 @@ func health(w http.ResponseWriter, _ *http.Request) {
 	_, _ = w.Write([]byte("ok"))
 }
 
+// In a simple application like this one we just define request and response manually.
+// But in more complex applications we will use some openAPI, graphQL or something similar.
 func locateDrone(sectorID float64) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var drData droneData
+		// LimitReader is used to prevent OOM on large requests.
 		err := json.NewDecoder(io.LimitReader(r.Body, bodySizeLimit)).Decode(&drData)
 		if err != nil {
 			log.Ctx(r.Context()).Err(err).Msg("Invalid drone data.")
@@ -82,6 +85,7 @@ func locateDrone(sectorID float64) http.HandlerFunc {
 	}
 }
 
+// responseWriter is used to remember status code that was set by handler.
 type responseWriter struct {
 	http.ResponseWriter
 	code int
@@ -105,6 +109,7 @@ var (
 	)
 )
 
+// apiResponse is used as a convenient wrapper to send responses.
 type apiResponse struct {
 	Code int
 	Body interface{}
@@ -149,6 +154,7 @@ func newDrone(dd droneData) (drone.Drone, error) {
 	return dr, nil
 }
 
+// droneData is used to decouple API specific serialisation logic from business logic.
 type droneData struct {
 	X   string `json:"x"`
 	Y   string `json:"y"`

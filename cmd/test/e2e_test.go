@@ -17,6 +17,7 @@ import (
 const webAddr = "localhost"
 const webPort = 8090
 
+// This is not the cleanest approach. In more complex application we would use a more sophisticated setup.
 func TestMain(m *testing.M) {
 	ctx, cancel := context.WithCancel(context.Background())
 	server := exec.CommandContext(
@@ -44,10 +45,6 @@ func TestMain(m *testing.M) {
 	code := m.Run()
 	cancel()
 	os.Exit(code)
-}
-
-func TestEmpty(t *testing.T) {
-
 }
 
 func TestHealth(t *testing.T) {
