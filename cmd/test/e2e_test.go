@@ -31,7 +31,7 @@ func TestMain(m *testing.M) {
 	}
 	var tries int
 	for {
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(1000 * time.Millisecond)
 		resp, err := http.Get(fmt.Sprintf("http://%s:%d/health", webAddr, webPort))
 		if err == nil {
 			_ = resp.Body.Close()
